@@ -4,12 +4,12 @@ Beginner friendly :)
 ---
 1. Clone repo.
 2. Run both server.py and client.py in same machine using
- **1st terminal**
+ + 1st terminal
  ```
  chmod +x server.py
  ./server.py
  ```
- **2nd terminal**
+ + 2nd terminal
  ```
  chmod +x reverse_shell.py
  ./reverse_shell.py
